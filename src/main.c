@@ -1,6 +1,7 @@
 #include "t3f/t3f.h"
 #include "instance.h"
 #include "document.h"
+#include "ui/ui.h"
 
 /* main logic routine */
 void app_logic(void * data)
@@ -79,6 +80,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->view_zoom = 1.0;
 	app->bg_tile = make_checkerboard_bitmap(t3f_color_white, al_map_rgba_f(0.9, 0.9, 0.9, 1.0));
 	if(!app->bg_tile)
+	{
+		return false;
+	}
+	app->ui = dm_create_ui(app);
+	if(!app->ui)
 	{
 		return false;
 	}
