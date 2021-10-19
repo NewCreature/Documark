@@ -29,6 +29,30 @@ void dm_editor_logic(void * data)
 	{
 		app->view_y += speed;
 	}
+	if(t3f_key[ALLEGRO_KEY_MINUS])
+	{
+		if(app->view_zoom > 1.0)
+		{
+			app->view_zoom -= 0.5;
+		}
+		else
+		{
+			app->view_zoom *= 0.75;
+		}
+		t3f_key[ALLEGRO_KEY_MINUS] = 0;
+	}
+	if(t3f_key[ALLEGRO_KEY_EQUALS])
+	{
+		if(app->view_zoom > 1.0)
+		{
+			app->view_zoom += 0.5;
+		}
+		else
+		{
+			app->view_zoom /= 0.75;
+		}
+		t3f_key[ALLEGRO_KEY_EQUALS] = 0;
+	}
 }
 
 static void render_bg_tiles(APP_INSTANCE * app)
