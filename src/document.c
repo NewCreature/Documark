@@ -248,6 +248,7 @@ void dm_render_document(DM_DOCUMENT * dp, float x, float y, float scale)
 	al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
 	al_identity_transform(&transform);
 	al_scale_transform(&transform, scale, scale);
+	al_use_transform(&transform);
 	if(dp->original)
 	{
 		al_draw_bitmap(dp->original, x, y, 0);
