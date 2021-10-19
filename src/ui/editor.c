@@ -7,9 +7,25 @@ void dm_editor_center_view(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 }
 
-void dm_editor_logic(void * data)
+static int get_hover_element(APP_INSTANCE * app)
 {
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
+	int mouse_x, mouse_y;
+
+	mouse_x = t3f_mouse_x - app->view_x;
+	mouse_y = t3f_mouse_y - app->view_y;
+	for(i = 0; i < app->document->element_count; i++)
+	{
+		if(mouse_x >= app->document->element[i].x && mouse_x < app->document->element[i].x + app->document->element[i].width && mouse_y >= app->document->element[i].y && mouse_y < app->document->element[i].y + app->document->element[i].height)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+static void idle_logic(APP_INSTANCE * app)
+{
 	float speed;
 
 	speed = (1.0 / app->view_zoom) * DM_SCROLL_SPEED;
@@ -52,6 +68,42 @@ void dm_editor_logic(void * data)
 			app->view_zoom /= 0.75;
 		}
 		t3f_key[ALLEGRO_KEY_EQUALS] = 0;
+	}
+	app->hover_element = get_hover_element(app);
+	if(t3f_mouse_button[0])
+	{
+		if(app->hover_element >= 0)
+		{
+			if(app->document->element[app->hover_element].type == DM_ELEMENT_TEXT)
+			{
+				app->state = DM_STATE_RESIZE_TEXT;
+			}
+			else
+			{
+				app->state = DM_STATE_RESIZE_IMAGE;
+			}
+		}
+		else
+		{
+			if(app->mode == DM_MODE_TEXT)
+			{
+				app->state = DM_STATE_CREATE_TEXT;
+			}
+		}
+	}
+}
+
+void dm_editor_logic(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	switch(app->state)
+	{
+		case DM_STATE_IDLE:
+		{
+			idle_logic(app);
+			break;
+		}
 	}
 }
 

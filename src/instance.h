@@ -11,6 +11,9 @@ typedef struct
 	DM_DOCUMENT * document;
 	float view_x, view_y, view_zoom;
 	DM_UI * ui;
+	int state;
+	int mode;
+	int hover_element;
 
 } APP_INSTANCE;
 
