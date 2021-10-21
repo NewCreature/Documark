@@ -87,9 +87,34 @@ static void idle_logic(APP_INSTANCE * app)
 		{
 			if(app->mode == DM_MODE_TEXT)
 			{
+				app->document->element[app->document->element_count].type = DM_ELEMENT_TEXT;
+				app->document->element[app->document->element_count].x = app->view_x + t3f_mouse_x;
+				app->document->element[app->document->element_count].y = app->view_y + t3f_mouse_y;
+				app->document->element[app->document->element_count].width = 0;
+				app->document->element[app->document->element_count].height = 0;
 				app->state = DM_STATE_CREATE_TEXT;
 			}
 		}
+	}
+}
+
+static void create_text_logic(APP_INSTANCE * app)
+{
+	if(t3f_mouse_button[0])
+	{
+		app->document->element[app->document->element_count].width = t3f_mouse_x + app->view_x - app->document->element[app->document->element_count].x;
+		app->document->element[app->document->element_count].height = t3f_mouse_y + app->view_y - app->document->element[app->document->element_count].y;
+	}
+	else
+	{
+		if(!app->default_font)
+		{
+			app->default_font = al_load_font("data/OpenSans-Regular.ttf", app->document->element[app->document->element_count].height, 0);
+		}
+		app->document->element[app->document->element_count].support_data = app->default_font;
+		app->document->element[app->document->element_count].data = "Test";
+		app->document->element_count++;
+		app->state = DM_STATE_IDLE;
 	}
 }
 
@@ -97,12 +122,20 @@ void dm_editor_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	switch(app->state)
+	if(app->document)
 	{
-		case DM_STATE_IDLE:
+		switch(app->state)
 		{
-			idle_logic(app);
-			break;
+			case DM_STATE_IDLE:
+			{
+				idle_logic(app);
+				break;
+			}
+			case DM_STATE_CREATE_TEXT:
+			{
+				create_text_logic(app);
+				break;
+			}
 		}
 	}
 }
@@ -132,5 +165,9 @@ void dm_editor_render(void * data)
 	if(app->document)
 	{
 		dm_render_document(app->document, -app->view_x, -app->view_y, app->view_zoom);
+		if(app->state == DM_STATE_CREATE_TEXT)
+		{
+			al_draw_filled_rectangle(app->document->element[app->document->element_count].x, app->document->element[app->document->element_count].y, app->document->element[app->document->element_count].x + app->document->element[app->document->element_count].width, app->document->element[app->document->element_count].y + app->document->element[app->document->element_count].height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		}
 	}
 }

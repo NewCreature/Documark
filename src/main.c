@@ -3,6 +3,7 @@
 #include "document.h"
 #include "ui/ui.h"
 #include "ui/editor.h"
+#include "defines.h"
 
 /* main logic routine */
 void app_logic(void * data)
@@ -62,6 +63,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	app->state = DM_STATE_IDLE;
 	return true;
 }
 

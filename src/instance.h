@@ -8,6 +8,7 @@ typedef struct
 {
 
 	ALLEGRO_BITMAP * bg_tile;
+	ALLEGRO_FONT * default_font;
 	DM_DOCUMENT * document;
 	float view_x, view_y, view_zoom;
 	DM_UI * ui;
