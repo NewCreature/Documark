@@ -1,0 +1,21 @@
+Documark Issues
+---------------
+
+[ ]Find ideal zoom level to fit the document inside the window and apply it
+   automatically.
+
+[ ]Add ability to adjust font size.
+
+[ ]Implement adding images to document.
+
+[ ]Implement editing text element contents.
+
+[ ]Implement moving elements by clicking and dragging.
+
+[ ]Implement exporting.
+
+[ ]Implement deleting elements.
+
+[ ]Rework text element to not include font in its own data. There should
+   probably be a document font that applies to all text elements in the
+	 document.
