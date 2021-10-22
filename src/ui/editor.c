@@ -5,6 +5,26 @@
 void dm_editor_center_view(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	float rx, ry;
+	float s1, s2;
+
+	if(app->document && app->document->original)
+	{
+		rx = (float)(al_get_display_width(t3f_display) - DM_VIEW_MARGIN) / (float)al_get_bitmap_width(app->document->original);
+		ry = (float)(al_get_display_height(t3f_display) - DM_VIEW_MARGIN) / (float)al_get_bitmap_height(app->document->original);
+		if(rx < ry)
+		{
+			app->view_zoom = rx;
+		}
+		else
+		{
+			app->view_zoom = ry;
+			s1 = al_get_display_width(t3f_display) / app->view_zoom;
+			s2 = al_get_bitmap_width(app->document->original);
+			app->view_x = s1 / 2.0 - s2 / 2.0 + DM_VIEW_MARGIN / app->view_zoom;
+			app->view_y = DM_VIEW_MARGIN / app->view_zoom;
+		}
+	}
 }
 
 static int get_hover_element(APP_INSTANCE * app)
@@ -28,47 +48,7 @@ static void idle_logic(APP_INSTANCE * app)
 {
 	float speed;
 
-	speed = (1.0 / app->view_zoom) * DM_SCROLL_SPEED;
-	if(t3f_key[ALLEGRO_KEY_LEFT])
-	{
-		app->view_x -= speed;
-	}
-	if(t3f_key[ALLEGRO_KEY_RIGHT])
-	{
-		app->view_x += speed;
-	}
-	if(t3f_key[ALLEGRO_KEY_UP])
-	{
-		app->view_y -= speed;
-	}
-	if(t3f_key[ALLEGRO_KEY_DOWN])
-	{
-		app->view_y += speed;
-	}
-	if(t3f_key[ALLEGRO_KEY_MINUS])
-	{
-		if(app->view_zoom > 1.0)
-		{
-			app->view_zoom -= 0.5;
-		}
-		else
-		{
-			app->view_zoom *= 0.75;
-		}
-		t3f_key[ALLEGRO_KEY_MINUS] = 0;
-	}
-	if(t3f_key[ALLEGRO_KEY_EQUALS])
-	{
-		if(app->view_zoom > 1.0)
-		{
-			app->view_zoom += 0.5;
-		}
-		else
-		{
-			app->view_zoom /= 0.75;
-		}
-		t3f_key[ALLEGRO_KEY_EQUALS] = 0;
-	}
+	dm_editor_center_view(app);
 	app->hover_element = get_hover_element(app);
 	if(t3f_mouse_button[0])
 	{
@@ -164,7 +144,7 @@ void dm_editor_render(void * data)
 	render_bg_tiles(app);
 	if(app->document)
 	{
-		dm_render_document(app->document, -app->view_x, -app->view_y, app->view_zoom);
+		dm_render_document(app->document, app->view_x, app->view_y, app->view_zoom);
 		if(app->state == DM_STATE_CREATE_TEXT)
 		{
 			al_draw_filled_rectangle(app->document->element[app->document->element_count].x, app->document->element[app->document->element_count].y, app->document->element[app->document->element_count].x + app->document->element[app->document->element_count].width, app->document->element[app->document->element_count].y + app->document->element[app->document->element_count].height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
