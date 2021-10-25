@@ -10,6 +10,8 @@ typedef struct
 	ALLEGRO_BITMAP * bg_tile;
 	ALLEGRO_FONT * default_font;
 	DM_DOCUMENT * document;
+	ALLEGRO_TRANSFORM view_transform;
+	ALLEGRO_TRANSFORM inverse_view_transform;
 	float view_x, view_y, view_zoom;
 	DM_UI * ui;
 	int state;

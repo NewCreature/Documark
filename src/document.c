@@ -241,14 +241,8 @@ static void render_element(DM_DOCUMENT_ELEMENT * dep, float x, float y)
 
 void dm_render_document(DM_DOCUMENT * dp, float x, float y, float scale)
 {
-	ALLEGRO_TRANSFORM transform;
-	ALLEGRO_STATE old_state;
 	int i;
 
-	al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
-	al_identity_transform(&transform);
-	al_scale_transform(&transform, scale, scale);
-	al_use_transform(&transform);
 	if(dp->original)
 	{
 		al_draw_bitmap(dp->original, x, y, 0);
@@ -257,5 +251,4 @@ void dm_render_document(DM_DOCUMENT * dp, float x, float y, float scale)
 	{
 		render_element(&dp->element[i], x, y);
 	}
-	al_restore_state(&old_state);
 }
