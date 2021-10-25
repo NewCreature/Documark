@@ -1,8 +1,11 @@
 Documark Issues
 ---------------
 
-[ ]Find ideal zoom level to fit the document inside the window and apply it
+[X]Find ideal zoom level to fit the document inside the window and apply it
    automatically.
+
+[ ]Don't require the user to draw a box when creating a text element. The user
+   should be able to click anywhere and start typing text.
 
 [ ]Add ability to adjust font size.
 
